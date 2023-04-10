@@ -1,0 +1,209 @@
+﻿<Window
+  x:Class="WordAssistedTools.Views.UserSettings"
+  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+  xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+  xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+  xmlns:local="clr-namespace:WordAssistedTools.Views"
+  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+  xmlns:models="clr-namespace:WordAssistedTools.Models"
+  xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+  xmlns:vm="clr-namespace:WordAssistedTools.ViewModels"
+  Name="SettingWindow"
+  Title="默认设置"
+  d:DataContext="{d:DesignInstance vm:UserSettingsViewModel,
+                                   IsDesignTimeCreatable=True}"
+  ResizeMode="NoResize"
+  SizeToContent="WidthAndHeight"
+  WindowStartupLocation="CenterScreen"
+  mc:Ignorable="d">
+  <Window.Resources>
+    <ResourceDictionary>
+      <local:BoolToOnOffStateConverter x:Key="BoolToOnOffStateConverter" />
+      <local:ComparisonConverter x:Key="ComparisonConverter" />
+      <ResourceDictionary.MergedDictionaries>
+        <ui:ThemesDictionary Theme="Light" />
+        <ui:ControlsDictionary />
+      </ResourceDictionary.MergedDictionaries>
+    </ResourceDictionary>
+  </Window.Resources>
+  <StackPanel Width="800" Margin="10">
+    <TextBlock
+      Margin="2,0,0,8"
+      FontSize="14"
+      Text="时间自动规划" />
+    <ui:CardControl Icon="PhoneScreenTime24">
+      <ui:CardControl.Header>
+        <StackPanel Grid.Column="0" VerticalAlignment="Center">
+          <TextBlock
+            FontSize="13"
+            FontWeight="Medium"
+            Text="限制总时间(分钟)" />
+          <TextBlock
+            FontSize="12"
+            Foreground="{DynamicResource TextFillColorTertiaryBrush}"
+            Text="选择汇报或答辩的上限时间。" />
+        </StackPanel>
+      </ui:CardControl.Header>
+      <ComboBox
+        MinWidth="90"
+        MaxWidth="90"
+        IsEditable="True"
+        ItemsSource="{x:Static models:Consts.UpperLimitTimes}"
+        Text="{Binding SelectedUpperLimitTime}" />
+    </ui:CardControl>
+    <ui:CardControl Margin="0,8,0,0" Icon="Timer16">
+      <ui:CardControl.Header>
+        <StackPanel Grid.Column="0" VerticalAlignment="Center">
+          <TextBlock
+            FontSize="13"
+            FontWeight="Medium"
+            Text="时间余量(秒)" />
+          <TextBlock
+            FontSize="12"
+            Foreground="{DynamicResource TextFillColorTertiaryBrush}"
+            Text="选择余留的时间，总时间减去余留时间为实际汇报或答辩的时间。" />
+        </StackPanel>
+      </ui:CardControl.Header>
+      <ComboBox
+        MinWidth="90"
+        MaxWidth="90"
+        IsEditable="True"
+        ItemsSource="{x:Static models:Consts.FinalReservedTimes}"
+        Text="{Binding SelectedFinalReservedTime}" />
+    </ui:CardControl>
+    <ui:CardControl Margin="0,8,0,0" Icon="Timer324">
+      <ui:CardControl.Header>
+        <StackPanel Grid.Column="0" VerticalAlignment="Center">
+          <TextBlock
+            FontSize="13"
+            FontWeight="Medium"
+            Text="切片时间(秒)" />
+          <TextBlock
+            FontSize="12"
+            Foreground="{DynamicResource TextFillColorTertiaryBrush}"
+            Text="选择每次切换幻灯片时的时间，这也视为任意两个段落之间的停顿时间。" />
+        </StackPanel>
+      </ui:CardControl.Header>
+      <ComboBox
+        MinWidth="90"
+        MaxWidth="90"
+        IsEditable="True"
+        ItemsSource="{x:Static models:Consts.ChangeSlideTimes}"
+        Text="{Binding SelectedChangeSlideTime}" />
+    </ui:CardControl>
+    <TextBlock
+      Margin="2,8,0,0"
+      FontSize="14"
+      Text="导出PPT" />
+    <ui:CardControl Margin="0,8,0,0" Icon="AppsList20">
+      <ui:CardControl.Header>
+        <StackPanel
+          Grid.Column="0"
+          Width="640"
+          HorizontalAlignment="Left"
+          VerticalAlignment="Center">
+          <TextBlock
+            FontSize="13"
+            FontWeight="Medium"
+            Text="导出PPT命名习惯" />
+          <TextBlock
+            FontSize="12"
+            Foreground="{DynamicResource TextFillColorTertiaryBrush}"
+            Text="设置从Word文档到导出PPT的命名习惯，使导出时能自动检测PPT文件。使用&lt;&gt;-/分别表示左增加、右增加、删除和替换，使用:分隔操作和关键字，使用*分隔多个步骤的关键字，使用/分割替换词，使用|分割多条规则，忽略扩展名。例如：Word名为《测试Word-讲稿.docx》，PPT名为《新的测试PPT.pptx》，此时填写&quot;&lt;-/:新的*-讲稿*Word/PPT&quot;。"
+            TextWrapping="Wrap" />
+          <TextBox
+            Margin="0,5,0,0"
+            FontSize="12"
+            Text="{Binding WordToPptRules}" />
+        </StackPanel>
+      </ui:CardControl.Header>
+      <Button
+        Width="70"
+        Command="{Binding TryParseWordToPptRulesCommand}"
+        Content="解析" />
+    </ui:CardControl>
+    <ui:CardControl Margin="0,8,0,0" Icon="FlashAuto20">
+      <ui:CardControl.Header>
+        <StackPanel Grid.Column="0" VerticalAlignment="Center">
+          <TextBlock
+            FontSize="13"
+            FontWeight="Medium"
+            Text="浏览后自动加载" />
+          <TextBlock
+            FontSize="12"
+            Foreground="{DynamicResource TextFillColorTertiaryBrush}"
+            Text="在选择导出的PPT文件后自动加载备注。" />
+        </StackPanel>
+      </ui:CardControl.Header>
+      <ui:ToggleSwitch Content="{Binding RelativeSource={RelativeSource Self}, Path=IsChecked, Converter={StaticResource BoolToOnOffStateConverter}}" IsChecked="{Binding IsAutoLoadAfterBrowse}" />
+    </ui:CardControl>
+    <ui:CardControl Margin="0,8,0,0" Icon="TextColumnTwo20">
+      <ui:CardControl.Header>
+        <StackPanel Grid.Column="0" VerticalAlignment="Center">
+          <TextBlock
+            FontSize="13"
+            FontWeight="Medium"
+            Text="显示差异" />
+          <TextBlock
+            FontSize="12"
+            Foreground="{DynamicResource TextFillColorTertiaryBrush}"
+            Text="在加载完PPT备注后自动显示差异。" />
+        </StackPanel>
+      </ui:CardControl.Header>
+      <ui:ToggleSwitch Content="{Binding RelativeSource={RelativeSource Self}, Path=IsChecked, Converter={StaticResource BoolToOnOffStateConverter}}" IsChecked="{Binding IsAutoShowDifferAfterLoad}" />
+    </ui:CardControl>
+    <ui:CardControl Margin="0,8,0,0" Icon="VirtualNetwork20">
+      <ui:CardControl.Header>
+        <StackPanel Grid.Column="0" VerticalAlignment="Center">
+          <TextBlock
+            FontSize="13"
+            FontWeight="Medium"
+            Text="差异类型" />
+          <TextBlock
+            FontSize="12"
+            Foreground="{DynamicResource TextFillColorTertiaryBrush}"
+            Text="选择显示仅文本差异或文本与时间差异。" />
+        </StackPanel>
+      </ui:CardControl.Header>
+      <StackPanel Orientation="Horizontal">
+        <RadioButton Content="仅文本差异" IsChecked="{Binding Path=DifferenceType, Converter={StaticResource ComparisonConverter}, ConverterParameter={x:Static models:DifferenceType.OnlyText}}" />
+        <RadioButton Content="文本与时间差异" IsChecked="{Binding Path=DifferenceType, Converter={StaticResource ComparisonConverter}, ConverterParameter={x:Static models:DifferenceType.TimeAndText}}" />
+      </StackPanel>
+    </ui:CardControl>
+    <Grid Margin="0,10,0,0">
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="Auto" />
+        <ColumnDefinition Width="*" />
+        <ColumnDefinition Width="Auto" />
+        <ColumnDefinition Width="Auto" />
+      </Grid.ColumnDefinitions>
+      <Button
+        Grid.Column="0"
+        Width="100"
+        Command="{Binding RestoreCommand}"
+        Content="恢复默认" />
+      <Button
+        Grid.Column="2"
+        Width="80"
+        Margin="15,0"
+        Content="取消">
+        <i:Interaction.Triggers>
+          <i:EventTrigger EventName="Click">
+            <i:CallMethodAction MethodName="Close" TargetObject="{Binding RelativeSource={RelativeSource AncestorType=Window}}" />
+          </i:EventTrigger>
+        </i:Interaction.Triggers>
+      </Button>
+      <Button
+        Grid.Column="3"
+        Width="80"
+        Command="{Binding ConfirmCommand}"
+        CommandParameter="{Binding ElementName=SettingWindow}"
+        Content="确定" />
+
+
+
+    </Grid>
+  </StackPanel>
+
+</Window>

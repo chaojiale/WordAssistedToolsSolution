@@ -7,12 +7,13 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Threading;
 using System.IO;
+using Newtonsoft.Json.Linq;
 using Microsoft.Office.Tools.Ribbon;
 using Word = Microsoft.Office.Interop.Word;
-using WordAssistedTools.Properties;
 using WordAssistedTools.Utils;
 using WordAssistedTools.ViewModels;
 using WordAssistedTools.Views;
+using WordAssistedTools.Properties;
 using static WordAssistedTools.Utils.Methods;
 
 namespace WordAssistedTools {

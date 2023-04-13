@@ -1,9 +1,9 @@
-﻿using Prism.Mvvm;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Prism.Mvvm;
 using Prism.Commands;
 using System.Collections.ObjectModel;
 using System.Windows;
@@ -22,106 +22,76 @@ namespace WordAssistedTools.ViewModels {
     private readonly Word.Document _document;
 
     private int _totalWordsCount;
-
     public int TotalWordsCount {
       get => _totalWordsCount;
-      set {
-        _totalWordsCount = value;
-        RaisePropertyChanged();
-      }
+      set => SetProperty(ref _totalWordsCount, value);
     }
 
     private int _allParagraphCount;
-
     public int AllParagraphCount {
       get => _allParagraphCount;
-      set {
-        _allParagraphCount = value;
-        RaisePropertyChanged();
-      }
+      set => SetProperty(ref _allParagraphCount, value);
     }
 
     private double _estimatedSpeechSpeed;
-
     public double EstimatedSpeechSpeed {
       get => _estimatedSpeechSpeed;
       set {
-        _estimatedSpeechSpeed = value;
-        if (value <= 0) {
-          SpeechSpeedComment = "异常数值";
-        } else if (value < 125) {
-          SpeechSpeedComment = "很慢";
-        } else if (value < 175) {
-          SpeechSpeedComment = "较慢";
-        } else if (value < 225) {
-          SpeechSpeedComment = "适中";
-        } else if (value < 275) {
-          SpeechSpeedComment = "较快";
-        } else if (value < 325) {
-          SpeechSpeedComment = "极快";
-        } else {
-          SpeechSpeedComment = "起飞";
+        if (SetProperty(ref _estimatedSpeechSpeed, value)) {
+          SpeechSpeedComment = value switch {
+            <= 0 => "异常数值",
+            < 125 => "很慢",
+            < 175 => "较慢",
+            < 225 => "适中",
+            < 275 => "较快",
+            < 325 => "极快",
+            _ => "起飞"
+          };
         }
-        RaisePropertyChanged();
       }
     }
 
     private string _speechSpeedComment;
-
     public string SpeechSpeedComment {
       get => _speechSpeedComment;
-      set {
-        _speechSpeedComment = value;
-        RaisePropertyChanged();
-      }
+      set => SetProperty(ref _speechSpeedComment, value);
     }
-
-
 
     private double _realTotalTime;
-
     public double RealTotalTime {
       get => _realTotalTime;
-      set {
-        _realTotalTime = value;
-        RaisePropertyChanged();
-      }
+      set => SetProperty(ref _realTotalTime, value);
     }
 
-
     private double _selectedUpperLimitTime = Consts.UpperLimitTimes[1];
-
     public double SelectedUpperLimitTime {
       get => _selectedUpperLimitTime;
       set {
-        _selectedUpperLimitTime = value;
-        UpdateFinalTimeAndSpeed();
-        RaisePropertyChanged();
+        if (SetProperty(ref _selectedUpperLimitTime, value)) {
+          UpdateFinalTimeAndSpeed();
+        }
       }
     }
 
     private double _selectedFinalReservedTime = Consts.FinalReservedTimes[1];
-
     public double SelectedFinalReservedTime {
       get => _selectedFinalReservedTime;
       set {
-        _selectedFinalReservedTime = value;
-        UpdateFinalTimeAndSpeed();
-        RaisePropertyChanged();
+        if (SetProperty(ref _selectedFinalReservedTime, value)) {
+          UpdateFinalTimeAndSpeed();
+        }
       }
     }
 
     private double _selectedChangeSlideTime = Consts.ChangeSlideTimes[1];
-
     public double SelectedChangeSlideTime {
       get => _selectedChangeSlideTime;
       set {
-        _selectedChangeSlideTime = value;
-        UpdateFinalTimeAndSpeed();
-        RaisePropertyChanged();
+        if (SetProperty(ref _selectedChangeSlideTime, value)) {
+          UpdateFinalTimeAndSpeed();
+        }
       }
     }
-
 
     private void UpdateFinalTimeAndSpeed() {
       RealTotalTime = GetAllSeconds();
@@ -139,16 +109,10 @@ namespace WordAssistedTools.ViewModels {
     }
 
     private IList _selectedParagraphs = new List<ParagraphInfoViewModel>();
-
     public IList SelectedParagraphs {
       get => _selectedParagraphs;
-      set {
-        _selectedParagraphs = value;
-        RaisePropertyChanged();
-      }
+      set => SetProperty(ref _selectedParagraphs, value);
     }
-
-
 
     public ObservableCollection<ParagraphInfoViewModel> ParagraphInfoTable { get; } = new();
     public DelegateCommand LoadWindowCommand { get; set; }
@@ -160,8 +124,7 @@ namespace WordAssistedTools.ViewModels {
     public DelegateCommand TableMenuSetUncheckedCommand { get; set; }
 
     [Obsolete]
-    public AutoPlanViewModel() {
-    }
+    public AutoPlanViewModel() { }
 
     public AutoPlanViewModel(Word.Document document) {
       _document = document;
@@ -175,7 +138,7 @@ namespace WordAssistedTools.ViewModels {
 
       LoadUserSettings();
     }
-    
+
     private void TableMenuSetCheckedCommand_Execute() {
       SetSelectedRowsChecked(true);
     }
@@ -307,6 +270,8 @@ namespace WordAssistedTools.ViewModels {
       return ParagraphInfoTable.Where(p => p.IsChecked).ToList();
     }
 
+    private bool _hasPlanned = false;
+
     private void RefreshPlanningResultsCommand_Execute() {
       if (EstimatedSpeechSpeed <= 0) {
         ShowMsgBox.Error("异常数值！");
@@ -334,10 +299,17 @@ namespace WordAssistedTools.ViewModels {
 
         totalWordsToLastEnd += paragraphInfo.EstimateParaWordCount;
       }
+
+      _hasPlanned = true;
     }
 
 
     private void UpdateWordDocumentCommand_Execute(Window window) {
+      if (!_hasPlanned) {
+        ShowMsgBox.Warning("请先进行时间规划！");
+        return;
+      }
+
       Word.Paragraphs paragraphs = _document.Paragraphs;
       for (int i = 0; i < ParagraphInfoTable.Count; i++) {
         ParagraphInfoViewModel paragraphInfo = ParagraphInfoTable[i];

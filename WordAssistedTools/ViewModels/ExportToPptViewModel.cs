@@ -28,77 +28,54 @@ namespace WordAssistedTools.ViewModels {
     public string ExportPptPath {
       get => _exportPptPath;
       set {
-        _exportPptPath = value;
-        if (IsAutoLoadPptAfterBrowseChecked) {
-          LoadPptCommand_Execute();
+        if (SetProperty(ref _exportPptPath, value)) {
+          if (IsAutoLoadPptAfterBrowseChecked) {
+            LoadPptCommand_Execute();
+          }
         }
-        RaisePropertyChanged();
       }
     }
 
     private string _compareViewWordText;
     public string CompareViewWordText {
       get => _compareViewWordText;
-      set {
-        _compareViewWordText = value;
-        RaisePropertyChanged();
-      }
+      set => SetProperty(ref _compareViewWordText, value);
     }
 
     private string _compareViewPptText;
     public string CompareViewPptText {
       get => _compareViewPptText;
-      set {
-        _compareViewPptText = value;
-        RaisePropertyChanged();
-      }
+      set => SetProperty(ref _compareViewPptText, value);
     }
-
 
     private bool _isAutoLoadPptAfterBrowseChecked;
     public bool IsAutoLoadPptAfterBrowseChecked {
       get => _isAutoLoadPptAfterBrowseChecked;
-      set {
-        _isAutoLoadPptAfterBrowseChecked = value;
-        RaisePropertyChanged();
-      }
+      set => SetProperty(ref _isAutoLoadPptAfterBrowseChecked, value);
     }
 
     private bool? _isSelectAllItemsChecked;
     public bool? IsSelectAllItemsChecked {
       get => _isSelectAllItemsChecked;
-      set {
-        _isSelectAllItemsChecked = value;
-        RaisePropertyChanged();
-      }
+      set => SetProperty(ref _isSelectAllItemsChecked, value);
     }
 
     private bool _isShowDifferenceChecked;
     public bool IsShowDifferenceChecked {
       get => _isShowDifferenceChecked;
-      set {
-        _isShowDifferenceChecked = value;
-        RaisePropertyChanged();
-      }
+      set => SetProperty(ref _isShowDifferenceChecked, value);
     }
 
     private IList _selectedCompares = new List<WordPptCompareViewModel>();
-
     public IList SelectedCompares {
       get => _selectedCompares;
-      set {
-        _selectedCompares = value;
-        RaisePropertyChanged();
-      }
+      set => SetProperty(ref _selectedCompares, value);
     }
 
     private DifferenceType _differenceType = DifferenceType.OnlyText;
     public DifferenceType DifferenceType {
       get => _differenceType;
-      set {
-        _differenceType = value;
-        RaisePropertyChanged();
-      }
+      set => SetProperty(ref _differenceType, value);
     }
 
 
@@ -117,8 +94,7 @@ namespace WordAssistedTools.ViewModels {
     public DelegateCommand TableMenuSetUncheckedCommand { get; set; }
 
     [Obsolete]
-    public ExportToPptViewModel() {
-    }
+    public ExportToPptViewModel() { }
 
     public ExportToPptViewModel(Word.Document document) {
       _document = document;
@@ -332,8 +308,13 @@ namespace WordAssistedTools.ViewModels {
       }
 
       WordPptCompareViewModel item = (WordPptCompareViewModel)SelectedCompares[0];
-      CompareViewWordText = item.WordText.TrimEnd();
-      CompareViewPptText = item.PptText.TrimEnd();
+      if (!string.IsNullOrWhiteSpace(item.WordText) && !(string.IsNullOrWhiteSpace(item.PptText))) {
+        CompareViewWordText = item.WordText.TrimEnd();
+        CompareViewPptText = item.PptText.TrimEnd();
+      } else {
+        CompareViewWordText = "当前行数据不完整。";
+        CompareViewPptText = "当前行数据不完整。";
+      }
     }
 
 

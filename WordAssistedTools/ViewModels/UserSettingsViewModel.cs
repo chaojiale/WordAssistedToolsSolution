@@ -13,69 +13,45 @@ using WordAssistedTools.Utils;
 namespace WordAssistedTools.ViewModels {
   internal class UserSettingsViewModel : BindableBase {
     private double _selectedUpperLimitTime = Consts.UpperLimitTimes[1];
-
     public double SelectedUpperLimitTime {
       get => _selectedUpperLimitTime;
-      set {
-        _selectedUpperLimitTime = value;
-        RaisePropertyChanged();
-      }
+      set => SetProperty(ref _selectedUpperLimitTime, value);
     }
 
     private double _selectedFinalReservedTime = Consts.FinalReservedTimes[1];
-
     public double SelectedFinalReservedTime {
       get => _selectedFinalReservedTime;
-      set {
-        _selectedFinalReservedTime = value;
-        RaisePropertyChanged();
-      }
+      set => SetProperty(ref _selectedFinalReservedTime, value);
     }
 
     private double _selectedChangeSlideTime = Consts.ChangeSlideTimes[1];
-
     public double SelectedChangeSlideTime {
       get => _selectedChangeSlideTime;
-      set {
-        _selectedChangeSlideTime = value;
-        RaisePropertyChanged();
-      }
+      set => SetProperty(ref _selectedChangeSlideTime, value);
     }
 
     private string _wordToPptRules;
     public string WordToPptRules {
       get => _wordToPptRules;
-      set {
-        _wordToPptRules = value;
-        RaisePropertyChanged();
-      }
+      set => SetProperty(ref _wordToPptRules, value);
     }
 
     private bool _isAutoLoadAfterBrowse;
     public bool IsAutoLoadAfterBrowse {
       get => _isAutoLoadAfterBrowse;
-      set {
-        _isAutoLoadAfterBrowse = value;
-        RaisePropertyChanged();
-      }
+      set => SetProperty(ref _isAutoLoadAfterBrowse, value);
     }
 
     private bool _isAutoShowDifferAfterLoad;
     public bool IsAutoShowDifferAfterLoad {
       get => _isAutoShowDifferAfterLoad;
-      set {
-        _isAutoShowDifferAfterLoad = value;
-        RaisePropertyChanged();
-      }
+      set => SetProperty(ref _isAutoShowDifferAfterLoad, value);
     }
 
     private DifferenceType _differenceType = DifferenceType.OnlyText;
     public DifferenceType DifferenceType {
       get => _differenceType;
-      set {
-        _differenceType = value;
-        RaisePropertyChanged();
-      }
+      set => SetProperty(ref _differenceType, value);
     }
 
     public DelegateCommand TryParseWordToPptRulesCommand { get; set; }
@@ -88,7 +64,6 @@ namespace WordAssistedTools.ViewModels {
       ConfirmCommand = new DelegateCommand<Window>(ConfirmCommand_Execute);
       LoadUserSettings();
     }
-
 
     private void TryParseWordToPptRulesCommand_Execute() {
       bool flag = WordToPptRulesUtils.TryParseWordToPptRules(WordToPptRules, out List<Dictionary<ProcessType, (string, string)>> allRuleInfos);

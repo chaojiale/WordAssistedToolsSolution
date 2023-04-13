@@ -115,13 +115,13 @@ namespace WordAssistedTools.ViewModels {
     }
 
     public ObservableCollection<ParagraphInfoViewModel> ParagraphInfoTable { get; } = new();
-    public DelegateCommand LoadWindowCommand { get; set; }
-    public DelegateCommand SaveAsDefaultSettingsCommand { get; set; }
-    public DelegateCommand RestoreEstimateParaWordCountCommand { get; set; }
-    public DelegateCommand RefreshPlanningResultsCommand { get; set; }
-    public DelegateCommand<Window> UpdateWordDocumentCommand { get; set; }
-    public DelegateCommand TableMenuSetCheckedCommand { get; set; }
-    public DelegateCommand TableMenuSetUncheckedCommand { get; set; }
+    public DelegateCommand LoadWindowCommand { get; }
+    public DelegateCommand SaveAsDefaultSettingsCommand { get; }
+    public DelegateCommand RestoreEstimateParaWordCountCommand { get; }
+    public DelegateCommand RefreshPlanningResultsCommand { get; }
+    public DelegateCommand<Window> UpdateWordDocumentCommand { get; }
+    public DelegateCommand TableMenuSetCheckedCommand { get; }
+    public DelegateCommand TableMenuSetUncheckedCommand { get; }
 
     [Obsolete]
     public AutoPlanViewModel() { }

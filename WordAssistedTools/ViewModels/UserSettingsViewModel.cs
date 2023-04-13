@@ -54,9 +54,9 @@ namespace WordAssistedTools.ViewModels {
       set => SetProperty(ref _differenceType, value);
     }
 
-    public DelegateCommand TryParseWordToPptRulesCommand { get; set; }
-    public DelegateCommand RestoreCommand { get; set; }
-    public DelegateCommand<Window> ConfirmCommand { get; set; }
+    public DelegateCommand TryParseWordToPptRulesCommand { get; }
+    public DelegateCommand RestoreCommand { get; }
+    public DelegateCommand<Window> ConfirmCommand { get; }
 
     public UserSettingsViewModel() {
       TryParseWordToPptRulesCommand = new DelegateCommand(TryParseWordToPptRulesCommand_Execute);

@@ -80,18 +80,18 @@ namespace WordAssistedTools.ViewModels {
 
 
     public ObservableCollection<WordPptCompareViewModel> WordPptCompareTable { get; } = new();
-    public DelegateCommand LoadWindowCommand { get; set; }
-    public DelegateCommand BrowsePptPathCommand { get; set; }
-    public DelegateCommand LoadPptCommand { get; set; }
-    public DelegateCommand SelectionChangedCommand { get; set; }
-    public DelegateCommand SelectAllComparesCommand { get; set; }
-    public DelegateCommand ShowDifferenceCommand { get; set; }
-    public DelegateCommand<Window> UpdateWordDocumentCommand { get; set; }
-    public DelegateCommand<Window> OverwritePptCommand { get; set; }
-    public DelegateCommand<Window> CancelCommand { get; set; }
-    public DelegateCommand WindowClosingCommand { get; set; }
-    public DelegateCommand TableMenuSetCheckedCommand { get; set; }
-    public DelegateCommand TableMenuSetUncheckedCommand { get; set; }
+    public DelegateCommand LoadWindowCommand { get; }
+    public DelegateCommand BrowsePptPathCommand { get; }
+    public DelegateCommand LoadPptCommand { get; }
+    public DelegateCommand SelectionChangedCommand { get; }
+    public DelegateCommand SelectAllComparesCommand { get; }
+    public DelegateCommand ShowDifferenceCommand { get; }
+    public DelegateCommand<Window> UpdateWordDocumentCommand { get; }
+    public DelegateCommand<Window> OverwritePptCommand { get; }
+    public DelegateCommand<Window> CancelCommand { get; }
+    public DelegateCommand WindowClosingCommand { get; }
+    public DelegateCommand TableMenuSetCheckedCommand { get; }
+    public DelegateCommand TableMenuSetUncheckedCommand { get; }
 
     [Obsolete]
     public ExportToPptViewModel() { }
